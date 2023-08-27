@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS segments (
+    id SERIAL PRIMARY KEY,
+    slug VARCHAR(255) UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS user_segments (
+    user_id SERIAL NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    segment_id SERIAL NOT NULL REFERENCES segments (id) ON DELETE CASCADE,
+    ttl INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT TIMEZONE('UTC', NOW()),
+    PRIMARY KEY (user_id, segment_id)
+);

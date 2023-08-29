@@ -2,21 +2,23 @@ package main
 
 import (
 	"avito-segment/internal"
+	"context"
 	"log"
-
-	"github.com/ilyakaznacheev/cleanenv"
 )
 
 func main() {
-	cfg := &internal.Config{}
-	if err := cleanenv.ReadConfig("./.env", cfg); err != nil {
-		log.Fatalf("Could not read env, %v", err)
-	}
+    ctx, cancel := context.WithCancel(context.Background())
+    defer cancel()
 
-	s, err := internal.NewApp(cfg)
+    cfg, err := internal.NewConfig()
+    if err != nil {
+        log.Fatalln(err)
+    }
+
+	s, err := internal.NewApp(ctx, cfg)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	log.Fatalln(s.Run())
+	log.Fatalln(s.Run(ctx))
 }

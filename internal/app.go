@@ -38,14 +38,13 @@ type App struct {
 	mux    *mux.Router
 	pgConn *pgx.Conn
 	em     events.EventManager
-	ctx    context.Context
 }
 
-// @title Test Task
-// @version 1.0
-// @BasePath /
-func NewApp(cfg *Config) (*App, error) {
-	pgConn, err := pkgDb.NewPostgresClient(context.Background(), cfg.Db.BuildDsn("postgresql"))
+// @title		Test Task
+// @version	1.0
+// @BasePath	/
+func NewApp(ctx context.Context, cfg *Config) (*App, error) {
+	pgConn, err := pkgDb.NewPostgresClient(ctx, cfg.Db.BuildDsn("postgresql"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -71,16 +70,16 @@ func NewApp(cfg *Config) (*App, error) {
 		mux:    mux,
 		pgConn: pgConn,
 		em:     em,
-		ctx:    context.Background(),
 	}, nil
 }
 
-func (app *App) Run() error {
-	defer app.ctx.Done()
-	defer app.pgConn.Close(context.Background())
+func (app *App) Run(ctx context.Context) error {
+	ctxLocal, cancel := context.WithCancel(ctx)
+	defer cancel()
+	defer app.pgConn.Close(ctxLocal)
 
 	log.Println("Starting server...")
-	app.startScheduler()
+	app.startScheduler(ctxLocal)
 	srv := &http.Server{
 		Handler:      app.mux,
 		Addr:         fmt.Sprintf(":%s", app.cfg.Port),
@@ -88,7 +87,11 @@ func (app *App) Run() error {
 		ReadTimeout:  6 * time.Second,
 	}
 
-	return srv.ListenAndServe()
+	err := srv.ListenAndServe()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func initServices(server *rpc.Server, dbConn *pgx.Conn, em events.EventManager) error {
@@ -127,17 +130,15 @@ func initServices(server *rpc.Server, dbConn *pgx.Conn, em events.EventManager) 
 	return nil
 }
 
-func (app *App) startScheduler() {
+func (app *App) startScheduler(ctx context.Context) {
 	ticker := time.NewTicker(1 * time.Minute)
 
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
-				{
-					_ = app.em.Publish("task.deleteUserSegmentsTTL", nil)
-				}
-			case <-app.ctx.Done():
+				_ = app.em.Publish("task.deleteUserSegmentsTTL", nil)
+			case <-ctx.Done():
 				return
 			}
 

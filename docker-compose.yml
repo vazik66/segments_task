@@ -1,4 +1,14 @@
 services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+
   database:
     image: postgres:15
     restart: unless-stopped

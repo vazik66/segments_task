@@ -77,7 +77,7 @@ func (r *repository) AddSegmentsToUser(ctx context.Context, userID uint, slugs *
 	return nil
 }
 
-func (r *repository) RemoveSegmentsFromUser(ctx context.Context, userID uint, slugs *[]string) error {
+func (r *repository) RemoveSegmentsFromUser(ctx context.Context, userID uint, slugs *[]string) (int, error) {
 	q := `DELETE FROM user_segments
     WHERE user_segments.user_id = $1
     AND user_segments.segment_id = (SELECT id FROM segments WHERE slug = $2);`
@@ -89,15 +89,51 @@ func (r *repository) RemoveSegmentsFromUser(ctx context.Context, userID uint, sl
 
 	results := r.db.SendBatch(ctx, batch)
 	defer results.Close()
-
+    
+    rowsAffected := 0
 	for range *slugs {
-		_, err := results.Exec()
+		tag, err := results.Exec()
+        rowsAffected += int(tag.RowsAffected())
 		if err != nil {
-			return handleError(err)
+			return 0, handleError(err)
 		}
 	}
 
-	return nil
+	return rowsAffected, nil
+}
+
+func (r *repository) DeleteDeadUserSegments(ctx context.Context) (*[]usersegments.DeadUserSegment, error) {
+    q := `DELETE FROM user_segments
+    WHERE created_at + ttl * '1 secs'::interval <= timezone('UTC', now())
+    AND ttl != 0
+    RETURNING
+    user_id,
+    (SELECT slug FROM segments WHERE id = segment_id),
+    timezone('UTC', now());`
+
+	rows, err := r.db.Query(ctx, q)
+
+	if err != nil {
+		return nil, handleError(err)
+	}
+
+	deletedUserSegments := make([]usersegments.DeadUserSegment, 0)
+	for rows.Next() {
+		var deleted usersegments.DeadUserSegment
+
+		err = rows.Scan(
+			&deleted.UserID,
+			&deleted.Slug,
+			&deleted.CreatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		deletedUserSegments = append(deletedUserSegments, deleted)
+	}
+
+	return &deletedUserSegments, nil
 }
 
 func handleError(err error) error {

@@ -21,7 +21,7 @@ func NewHandler(service *segment.SegmentService) *RPCHandler {
 // @Description Method name: segments.Create
 // @Tags segments
 // @Accept json
-// @Product json
+// @Produce json
 // @Param Request body pkg.JsonRPCRequest{params=segment.CreateSegmentParams} true "Segment"
 // @Success 200 {object} pkg.JsonRPCSuccessResponse{result=segment.Segment}
 // @Failure 400 {object} pkg.JsonRPCErrorResponse
@@ -40,7 +40,7 @@ func (h *RPCHandler) Create(r *http.Request, args *segment.CreateSegmentParams, 
 // @Description Method name: segments.GetBySlug
 // @Tags segments
 // @Accept json
-// @Product json
+// @Produce json
 // @Param Request body pkg.JsonRPCRequest{params=string} true "Slug"
 // @Success 200 {object} pkg.JsonRPCSuccessResponse{result=segment.Segment}
 // @Failure 400 {object} pkg.JsonRPCErrorResponse
@@ -59,7 +59,7 @@ func (h *RPCHandler) GetBySlug(r *http.Request, args *string, reply *segment.Seg
 // @Description Method name: segments.List
 // @Tags segments
 // @Accept json
-// @Product json
+// @Produce json
 // @Param Request body pkg.JsonRPCRequest{params=pkg.EmptyArgs} true "Empty"
 // @Success 200 {object} pkg.JsonRPCSuccessResponse{result=[]segment.Segment}
 // @Failure 400 {object} pkg.JsonRPCErrorResponse
@@ -78,7 +78,7 @@ func (h *RPCHandler) List(r *http.Request, args *pkg.EmptyArgs, reply *[]segment
 // @Description Method name: segments.Delete
 // @Tags segments
 // @Accept json
-// @Product json
+// @Produce json
 // @Param Request body pkg.JsonRPCRequest{params=string} true "Slug"
 // @Success 200 {object} pkg.JsonRPCSuccessResponse{result=pkg.EmptyResponse}
 // @Failure 400 {object} pkg.JsonRPCErrorResponse

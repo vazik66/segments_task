@@ -21,7 +21,7 @@ func NewHandler(service *user.UserService) *RPCHandler {
 // @Description Method name: users.Create
 // @Tags users
 // @Accept json
-// @Product json
+// @Produce json
 // @Param Request body pkg.JsonRPCRequest{params=array} true "Desc"
 // @Success 200 {object} pkg.JsonRPCSuccessResponse{result=user.User}
 // @Failure 400 {object} pkg.JsonRPCErrorResponse
@@ -44,7 +44,7 @@ type UserIDArg struct {
 // @Description Method name: users.GetByID
 // @Tags users
 // @Accept json
-// @Product json
+// @Produce json
 // @Param Request body pkg.JsonRPCRequest{params=user.UserIDArg} true "User ID"
 // @Success 200 {object} pkg.JsonRPCSuccessResponse{result=user.User}
 // @Failure 400 {object} pkg.JsonRPCErrorResponse
@@ -63,7 +63,7 @@ func (h *RPCHandler) GetByID(r *http.Request, args *UserIDArg, reply *user.User)
 // @Description Method name: users.Delete
 // @Tags users
 // @Accept json
-// @Product json
+// @Produce json
 // @Param Request body pkg.JsonRPCRequest{params=UserIDArg} true "Desc"
 // @Success 200 {array} pkg.JsonRPCSuccessResponse{result=pkg.EmptyResponse}
 // @Failure 400 {object} pkg.JsonRPCErrorResponse
@@ -81,7 +81,7 @@ func (h *RPCHandler) Delete(r *http.Request, args *UserIDArg, reply *pkg.EmptyRe
 // @Description Method name: users.List
 // @Tags users
 // @Accept json
-// @Product json
+// @Produce json
 // @Param Request body pkg.JsonRPCRequest{params=pkg.EmptyArgs} true "Desc"
 // @Success 200 {array} pkg.JsonRPCSuccessResponse{result=[]user.User}
 // @Failure 400 {object} pkg.JsonRPCErrorResponse

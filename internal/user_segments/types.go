@@ -23,3 +23,9 @@ type RemoveSegmentsFromUserParams struct {
 type GetUserSegmentsParams struct {
 	UserID uint `json:"userId"`
 }
+
+type DeadUserSegment struct {
+    UserID uint
+    Slug string
+    CreatedAt time.Time
+}

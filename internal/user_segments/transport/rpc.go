@@ -23,7 +23,7 @@ func NewHandler(service *usersegments.UserSegmentsService) *RPCHandler {
 // @Description Method name: usersegments.AddSegmentsToUser
 // @Tags usersegments
 // @Accept json
-// @Product json
+// @Produce json
 // @Param Request body pkg.JsonRPCRequest{params=usersegments.AddSegmentsToUserParams} true "Desc"
 // @Success 200 {object} pkg.JsonRPCSuccessResponse{result=pkg.EmptyResponse}
 // @Failure 400 {object} pkg.JsonRPCErrorResponse
@@ -41,7 +41,7 @@ func (h *RPCHandler) AddSegmentsToUser(r *http.Request, args *usersegments.AddSe
 // @Description Method name: usersegments.RemoveSegmentsFromUser
 // @Tags usersegments
 // @Accept json
-// @Product json
+// @Produce json
 // @Param Request body pkg.JsonRPCRequest{params=usersegments.RemoveSegmentsFromUserParams} true "Desc"
 // @Success 200 {object} pkg.JsonRPCSuccessResponse{result=pkg.EmptyResponse}
 // @Failure 400 {object} pkg.JsonRPCErrorResponse
@@ -59,7 +59,7 @@ func (h *RPCHandler) RemoveSegmentsFromUser(r *http.Request, args *usersegments.
 // @Description Method name: usersegments.GetByUserID
 // @Tags usersegments
 // @Accept json
-// @Product json
+// @Produce json
 // @Param Request body pkg.JsonRPCRequest{params=usersegments.GetUserSegmentsParams} true "Desc"
 // @Success 200 {object} pkg.JsonRPCSuccessResponse{result=[]usersegments.UserSegment}
 // @Failure 400 {object} pkg.Error

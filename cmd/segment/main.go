@@ -13,7 +13,7 @@ func main() {
 		log.Fatalf("Could not read env, %v", err)
 	}
 
-	s, err := internal.NewRPCServer(cfg)
+	s, err := internal.NewApp(cfg)
 	if err != nil {
 		log.Fatalln(err)
 	}

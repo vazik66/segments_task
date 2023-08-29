@@ -3,10 +3,12 @@ module avito-segment
 go 1.19
 
 require (
+	github.com/google/uuid v1.3.1
 	github.com/gorilla/rpc v1.2.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
 	github.com/jackc/pgx/v5 v5.4.3
+	github.com/mitchellh/mapstructure v1.5.0
 	github.com/swaggo/http-swagger/v2 v2.0.1
 	github.com/swaggo/swag v1.16.1
 )

@@ -62,7 +62,7 @@ make migrate
 psql -h localhost -U postgres -d postgres -a -f ./pkg/migrations/000001_init.up.sql
 ```
 4. Swagger\
-Go to http://localhost:8080/swagger/ to see all endpoints and to send requests.\
+Go to http://localhost:8080/swagger/ to see all endpoints and to send requests.
 
 > [!IMPORTANT]
 > Method names for JSONRpc located in route description.

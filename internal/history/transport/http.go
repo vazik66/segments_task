@@ -1,10 +1,14 @@
 package history
 
 import (
+	"fmt"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
-type HTTPHandler struct {}
+type HTTPHandler struct {
+}
 
 func NewHTTPHandler() *HTTPHandler {
 	return &HTTPHandler{}
@@ -18,10 +22,9 @@ func NewHTTPHandler() *HTTPHandler {
 //	@Param			filename	path	string	true	"filename"
 //	@Success		200			{file}	file	"ok"
 //	@Failure		404
-//	@Router			/files/ [get]
-func (h *HTTPHandler) GetReportFile(w http.ResponseWriter, r *http.Request) error {
-    // just for swagger
-    // handled by http.FileServer
-	return nil
+//	@Router			/files/{filename} [get]
+func (h *HTTPHandler) GetReportFile(w http.ResponseWriter, r *http.Request) {
+	filename := mux.Vars(r)["filename"]
+	w.Header().Add("content-type", "application/octet-stream")
+	http.ServeFile(w, r, fmt.Sprintf("%s/%s", "files", filename))
 }
-

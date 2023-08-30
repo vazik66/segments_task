@@ -40,9 +40,9 @@ type App struct {
 	em     events.EventManager
 }
 
-// @title		Test Task
-// @version	1.0
-// @BasePath	/
+//	@title		Test Task
+//	@version	1.0
+//	@BasePath	/
 func NewApp(ctx context.Context, cfg *Config) (*App, error) {
 	pgConn, err := pkgDb.NewPostgresClient(ctx, cfg.Db.BuildDsn("postgresql"))
 	if err != nil {
@@ -63,7 +63,7 @@ func NewApp(ctx context.Context, cfg *Config) (*App, error) {
 	mux.PathPrefix("/swagger/").Handler(httpSwagger.Handler(
 		httpSwagger.URL(fmt.Sprintf("http://localhost:%s/swagger/doc.json", cfg.Port)),
 	))
-	mux.PathPrefix("/files/").Handler(http.StripPrefix("/files/", http.FileServer(http.Dir("files"))))
+	mux.HandleFunc("/files/{filename}", historyTransport.NewHTTPHandler().GetReportFile)
 
 	return &App{
 		cfg:    cfg,
